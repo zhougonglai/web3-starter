@@ -30,20 +30,17 @@ contract Domains is ERC721URIStorage {
 
     address payable public owner;
 
-    constructor(string memory _tld)
-        payable
-        ERC721("Erik's Name Service", "NNS")
-    {
+    constructor(string memory _tld) payable ERC721("ZGLLL", "ZGL") {
         owner = payable(msg.sender);
         tld = _tld;
-        console.log("%s name service is deployed", _tld);
+        console.log("%s name service deployed", _tld);
     }
 
     function register(string calldata name) public payable {
         require(domains[name] == address(0));
 
         uint256 _price = price(name);
-        require(msg.value >= _price, "没有足够的虚拟币");
+        require(msg.value >= _price, "Not enough Matic paid");
 
         // Combine the name passed into the function  with the TLD
         string memory _name = string(abi.encodePacked(name, ".", tld));
@@ -55,7 +52,12 @@ contract Domains is ERC721URIStorage {
         uint256 length = StringUtils.strlen(name);
         string memory strLen = Strings.toString(length);
 
-        console.log("注册 %s.%s 在合约上的tokenID %d", name, tld, newRecordId);
+        console.log(
+            "Registering %s.%s on the contract with tokenID %d",
+            name,
+            tld,
+            newRecordId
+        );
 
         // Create the JSON metadata of our NFT. We do this by combining strings and encoding as base64
         string memory json = Base64.encode(
